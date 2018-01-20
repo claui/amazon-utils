@@ -1,0 +1,14 @@
+#!/usr/bin/osascript
+
+set scriptPath to (path to me as text)
+
+set oldDelimiters to text item delimiters
+set text item delimiters to ":"
+set baseName to text item -1 of (scriptPath)
+set text item delimiters to oldDelimiters
+
+set projectRoot to POSIX path of (scriptPath & "::") & "../"
+set mainScript to load script ¬
+	projectRoot & "libexec/" & baseName & ".scpt"
+
+tell mainScript to run
