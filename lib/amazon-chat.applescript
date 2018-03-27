@@ -11,14 +11,17 @@ on run(argv)
 
 		execute currentTab javascript "
 			document
+				.getElementById('orderNo')
+				.dispatchEvent(new Event('click'));
+			document
 				.getElementById('SelIssue2')
-				.value = 25
+				.value = 63
 			document
 				.getElementById('SelIssue2')
 				.dispatchEvent(new Event('change'));
 			document
 				.getElementById('SelIssue3')
-				.value = 29
+				.value = 68
 			document
 				.getElementById('SelIssue3')
 				.dispatchEvent(new Event('change'));
@@ -26,10 +29,10 @@ on run(argv)
 			var chatButtonPrimary = document
 				.getElementById('chatButtonPrimary');
 
-			var intervalId = setInterval(function () {
+			var pollChatButtonId = setInterval(function () {
 			  var styleValue = chatButtonPrimary.attributes.style.value;
 				if (styleValue === '') {
-					clearInterval(intervalId);
+					clearInterval(pollChatButtonId);
 					chatButtonPrimary
 						.firstChild.dispatchEvent(new Event('click'));
 				}
