@@ -26,15 +26,14 @@ on run(argv)
 				.getElementById('SelIssue3')
 				.dispatchEvent(new Event('change'));
 
-			var chatButtonPrimary = document
-				.getElementById('chatButtonPrimary');
+			var chatButton = document
+				.getElementById('chatButton');
 
 			var pollChatButtonId = setInterval(function () {
-			  var styleValue = chatButtonPrimary.attributes.style.value;
-				if (styleValue === '') {
+			  var styleValue = chatButton.style.value;
+				if (typeof styleValue == 'undefined') {
 					clearInterval(pollChatButtonId);
-					chatButtonPrimary
-						.firstChild.dispatchEvent(new Event('click'));
+					chatButton.firstChild.dispatchEvent(new Event('click'));
 				}
 			}, 500);
 		"
