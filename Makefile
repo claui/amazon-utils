@@ -1,5 +1,6 @@
 PROGRAM_NAME=amazon-chat
 
+SHELL='/bin/bash'
 .PHONY: build clean run
 
 build: libexec/${PROGRAM_NAME}.scpt
