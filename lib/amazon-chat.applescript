@@ -15,13 +15,13 @@ on run(argv)
 				.dispatchEvent(new Event('click'));
 			document
 				.getElementById('SelIssue2')
-				.value = 63
+				.value = 62
 			document
 				.getElementById('SelIssue2')
 				.dispatchEvent(new Event('change'));
 			document
 				.getElementById('SelIssue3')
-				.value = 68
+				.value = 67
 			document
 				.getElementById('SelIssue3')
 				.dispatchEvent(new Event('change'));
