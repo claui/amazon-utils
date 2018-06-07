@@ -15,15 +15,9 @@ on run(argv)
 				.dispatchEvent(new Event('click'));
 			document
 				.getElementById('SelIssue2')
-				.value = 62
+				.value = 45
 			document
 				.getElementById('SelIssue2')
-				.dispatchEvent(new Event('change'));
-			document
-				.getElementById('SelIssue3')
-				.value = 66
-			document
-				.getElementById('SelIssue3')
 				.dispatchEvent(new Event('change'));
 
 			var chatButton = document
