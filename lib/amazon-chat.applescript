@@ -7,21 +7,29 @@ on run(argv)
 	my waitForPageToBeReady(currentTab, contactURL)
 
 	tell application "Google Chrome"
-		log "Executing JavaScript"
+		log "Starting JavaScript execution; " ¬
+			& "see developer console for details"
 
 		execute currentTab javascript "
+			var format = '[amazon-utils] %s';
 			var nonOrderButtonId = 27;
 			var preOrderOptionId = 45;
+
+			console.log(format, 'Switching to non-order section');
 
 			document
 				.getElementById(nonOrderButtonId)
 				.dispatchEvent(new Event('click'));
+
+			console.log(format, 'Selecting second node');
 
 			var secondNodeSelectBox = document
 				.getElementById('cu-select-secondNode');
 
 			secondNodeSelectBox.value = preOrderOptionId;
 			secondNodeSelectBox.dispatchEvent(new Event('change'));
+
+			console.log(format, 'Waiting on button');
 
 			var chatButton = document
 				.getElementsByClassName('cu-contact-channel-chat')[0]
@@ -31,9 +39,15 @@ on run(argv)
 			  var styleValue = chatButton.style.value;
 				if (typeof styleValue == 'undefined') {
 					clearInterval(pollChatButtonId);
+
+					console.log(format, 'Clicking button');
 					chatButton.dispatchEvent(new Event('click'));
+
+					console.log(format, 'Done');
 				}
 			}, 500);
+
+			'Done'
 		"
 	end tell
 end run
@@ -62,7 +76,7 @@ on waitForPageToBeReady(currentTab, contactURL)
 				delay 0.5
 			else
 				if currentTab's URL starts with contactURL then
-					log "Done"
+					log "Target page loaded"
 					exit
 				else
 					log "Redirection detected, waiting …"
