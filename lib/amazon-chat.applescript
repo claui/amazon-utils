@@ -1,6 +1,6 @@
 on run(argv)
 	set contactURL to ¬
-		"https://www.amazon.de/gp/help/customer/contact-us"
+		"https://www.amazon.de/hz/contact-us"
 
 	log "Requesting page: " & contactURL
 	set currentTab to my openTab(contactURL)
@@ -10,24 +10,28 @@ on run(argv)
 		log "Executing JavaScript"
 
 		execute currentTab javascript "
+			var nonOrderButtonId = 27;
+			var preOrderOptionId = 45;
+
 			document
-				.getElementById('orderNo')
+				.getElementById(nonOrderButtonId)
 				.dispatchEvent(new Event('click'));
-			document
-				.getElementById('SelIssue2')
-				.value = 45
-			document
-				.getElementById('SelIssue2')
-				.dispatchEvent(new Event('change'));
+
+			var secondNodeSelectBox = document
+				.getElementById('cu-select-secondNode');
+
+			secondNodeSelectBox.value = preOrderOptionId;
+			secondNodeSelectBox.dispatchEvent(new Event('change'));
 
 			var chatButton = document
-				.getElementById('chatButton');
+				.getElementsByClassName('cu-contact-channel-chat')[0]
+				.getElementsByClassName('cu-contact-channel-btn')[0];
 
 			var pollChatButtonId = setInterval(function () {
 			  var styleValue = chatButton.style.value;
 				if (typeof styleValue == 'undefined') {
 					clearInterval(pollChatButtonId);
-					chatButton.firstChild.dispatchEvent(new Event('click'));
+					chatButton.dispatchEvent(new Event('click'));
 				}
 			}, 500);
 		"
