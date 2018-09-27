@@ -15,37 +15,66 @@ on run(argv)
 			var nonOrderButtonId = 27;
 			var preOrderOptionId = 45;
 
-			console.log(format, 'Switching to non-order section');
+			var waitForElementById = (id) =>
+				waitForElement(() => document.getElementById(id));
 
-			document
-				.getElementById(nonOrderButtonId)
-				.dispatchEvent(new Event('click'));
+			var waitForElement = function (elementSelector) {
+				console.log(format, 'Waiting for element');
 
-			console.log(format, 'Selecting second node');
+				return new Promise((resolve, reject) => {
+					if (elementSelector === undefined) {
+						reject(new Error('No element selector given'));
+					}
 
-			var secondNodeSelectBox = document
-				.getElementById('cu-select-secondNode');
+					var pollId = setInterval(function () {
+						var element = elementSelector();
 
-			secondNodeSelectBox.value = preOrderOptionId;
-			secondNodeSelectBox.dispatchEvent(new Event('change'));
+						if (element !== undefined
+							&& element.style !== undefined
+							&& element.style.value === undefined) {
 
-			console.log(format, 'Waiting on button');
+							clearInterval(pollId);
+							console.log(format, 'Found element');
+							resolve(element);
+						}
+					}, 500);
+				});
+			};
 
-			var chatButton = document
-				.getElementsByClassName('cu-contact-channel-chat')[0]
-				.getElementsByClassName('cu-contact-channel-btn')[0];
+			var asyncRun = async function () {
+				console.log(format, 'Waiting for non-order button');
 
-			var pollChatButtonId = setInterval(function () {
-			  var styleValue = chatButton.style.value;
-				if (typeof styleValue == 'undefined') {
-					clearInterval(pollChatButtonId);
+				var nonOrderButton =
+					await waitForElementById(nonOrderButtonId);
 
-					console.log(format, 'Clicking button');
-					chatButton.dispatchEvent(new Event('click'));
+				console.log(format, 'Switching to non-order section');
+				nonOrderButton.dispatchEvent(new Event('click'));
 
-					console.log(format, 'Done');
-				}
-			}, 500);
+				console.log(format, 'Waiting for second select box');
+				var secondNodeSelectBox =
+					await waitForElementById('cu-select-secondNode');
+
+				console.log(format, 'Selecting second node');
+				secondNodeSelectBox.value = preOrderOptionId;
+				secondNodeSelectBox.dispatchEvent(new Event('change'));
+
+				console.log(format, 'Waiting for button wrapper');
+				var chatButtonWrapper = await waitForElement(() =>
+					document
+						.getElementsByClassName('cu-contact-channel-chat')[0]);
+
+				console.log(format, 'Waiting for button');
+				var chatButton = await waitForElement(() =>
+					chatButtonWrapper
+						.getElementsByClassName('cu-contact-channel-btn')[0]);
+
+				console.log(format, 'Clicking button');
+				chatButton.dispatchEvent(new Event('click'));
+
+				console.log(format, 'Done');
+			};
+
+			asyncRun();
 
 			'Done'
 		"
