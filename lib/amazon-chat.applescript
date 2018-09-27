@@ -10,15 +10,15 @@ on run(argv)
 		log "Starting JavaScript execution; " ¬
 			& "see developer console for details"
 
-		execute currentTab javascript "
-			var format = '[amazon-utils] %s';
-			var nonOrderButtonId = 27;
-			var preOrderOptionId = 45;
+		execute currentTab javascript "(() => {
+			const format = '[amazon-utils] %s';
+			const nonOrderButtonId = 27;
+			const preOrderOptionId = 45;
 
-			var waitForElementById = (id) =>
+			let waitForElementById = (id) =>
 				waitForElement(() => document.getElementById(id));
 
-			var waitForElement = function (elementSelector) {
+			let waitForElement = function (elementSelector) {
 				console.log(format, 'Waiting for element');
 
 				return new Promise((resolve, reject) => {
@@ -26,8 +26,8 @@ on run(argv)
 						reject(new Error('No element selector given'));
 					}
 
-					var pollId = setInterval(function () {
-						var element = elementSelector();
+					let pollId = setInterval(function () {
+						let element = elementSelector();
 
 						if (element !== undefined
 							&& element.style !== undefined
@@ -41,17 +41,17 @@ on run(argv)
 				});
 			};
 
-			var asyncRun = async function () {
+			let asyncRun = async function () {
 				console.log(format, 'Waiting for non-order button');
 
-				var nonOrderButton =
+				let nonOrderButton =
 					await waitForElementById(nonOrderButtonId);
 
 				console.log(format, 'Switching to non-order section');
 				nonOrderButton.dispatchEvent(new Event('click'));
 
 				console.log(format, 'Waiting for second select box');
-				var secondNodeSelectBox =
+				let secondNodeSelectBox =
 					await waitForElementById('cu-select-secondNode');
 
 				console.log(format, 'Selecting second node');
@@ -59,12 +59,12 @@ on run(argv)
 				secondNodeSelectBox.dispatchEvent(new Event('change'));
 
 				console.log(format, 'Waiting for button wrapper');
-				var chatButtonWrapper = await waitForElement(() =>
+				let chatButtonWrapper = await waitForElement(() =>
 					document
 						.getElementsByClassName('cu-contact-channel-chat')[0]);
 
 				console.log(format, 'Waiting for button');
-				var chatButton = await waitForElement(() =>
+				let chatButton = await waitForElement(() =>
 					chatButtonWrapper
 						.getElementsByClassName('cu-contact-channel-btn')[0]);
 
@@ -77,7 +77,7 @@ on run(argv)
 			asyncRun();
 
 			'Done'
-		"
+		})();"
 	end tell
 end run
 
